@@ -433,15 +433,15 @@ input[type*="text"]{
 							  </td>
 							 </tr>
 							");
-					while(list($CodigoSocio,$nomesocio,$cpfsocio)=mysql_fetch_array($sql))
-					{
-						print("	    
-						<tr>
-						   <td align=left colspan=4>
-							<input type=hidden name=txtCodigoSocio$contsocios value=$CodigoSocio>
-							Nome&nbsp; <input type=text name=txtnomesocio$contsocios value=\"$nomesocio\" size=40 maxlength=100 class=texto>&nbsp;
-							CPF&nbsp;<input type=text name=txtcpfsocio$contsocios value=$cpfsocio size=14 maxlength=14 class=texto 
-							onkeyup=\"CNPJCPFMsk( this );\">");
+					while($array=mysql_fetch_array($sql))
+                                        {
+                                                print("     
+                                                <tr>
+                                                   <td align=left colspan=4>
+                                                        <input type=hidden name=txtCodigoSocio".$contsocios." value=".$array['codigo'].">
+                                                        Nome&nbsp; <input type=text name=txtnomesocio$contsocios value=\"".$array['nome']."\" size=40 maxlength=100 class=texto>&nbsp;
+                                                        CPF&nbsp;<input type=text name=txtcpfsocio$contsocios value=".$array['cpf']." size=14 maxlength=14 class=texto 
+                                                        onkeyup=\"CNPJCPFMsk( this );\">");
 							print("<input type=checkbox name=checkExcluiSocio$contsocios value=$CodigoSocio>Excluir"); 				
 						print("</td>		   
 						</tr> ");
