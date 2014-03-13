@@ -51,7 +51,10 @@ if($cod_seguranca == $_SESSION['autenticacao'] && $cod_seguranca){
 					$_SESSION['login'] = $login;
 					$_SESSION['nome'] = $dados['nome'];
 					$nome = $dados['nome'];
+					$_SESSION['login-banco'] = $campologin;
 					print("<script language=JavaScript>parent.location='../login.php';</script>");
+					
+					
 				}else{
 					print("<script language=JavaScript>alert('Somente prestadores podem se logar no sistema.');
 					parent.location='../login.php';</script>");	
@@ -71,4 +74,5 @@ if($cod_seguranca == $_SESSION['autenticacao'] && $cod_seguranca){
 }else{
 	print("<script language=JavaScript>alert('Favor verificar código de segurança!');parent.location='../login.php';</script>");
 }
+mysql_close();
 ?>

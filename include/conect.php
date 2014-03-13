@@ -21,6 +21,7 @@ Fith Floor, Boston, MA 02110-1301, USA
 <?php 
 //arquivo com as configuracoes de HOST, USUARIO, SENHA e BANCO
 require_once dirname(__FILE__).'/config.php';
+date_default_timezone_set('America/Sao_Paulo');
 
 // Conectar ao banco de dados das prefeituras
 $conectar_pref = mysql_connect($HOST,$USUARIO, $SENHA); 

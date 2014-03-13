@@ -28,7 +28,17 @@ $cod_seguranca= $_POST['codseguranca'];
 if($cod_seguranca == $_SESSION['autenticacao'] && $cod_seguranca)
 {
 
-include("conect.php");
+//include("conect.php");
+
+$mysql_db_hostname = "br12.hostgator.com.br";
+$mysql_db_user = "pmbpr396_desenvo";
+$mysql_db_password = "seiti*2013";
+$mysql_db_database = "pmbpr396_desenvolvimento";
+
+$con = mysql_connect($mysql_db_hostname, $mysql_db_user, $mysql_db_password) or die("Não foi possível conectar com o banco");
+mysql_select_db($mysql_db_database, $con) or die("Não foi possível selecionar banco");
+
+
 $sql = mysql_query("SELECT * FROM usuarios WHERE login = '".$_POST['txtLogin']."' and tipo = 'prefeitura' ");	
  if(mysql_num_rows($sql) > 0) 
  { 

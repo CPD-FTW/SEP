@@ -66,6 +66,9 @@ $ultimaNota         = ($_POST['txtNfeNum']-1);
 /*regime especial*/
 $regimeEspecial		= $_POST['txtRegimeEspecial'];
 
+$txtContador = $_POST['txtContador'];
+$txtCNPJContador = $_POST['txtCNPJContador'];
+
 if(!$isentoIss){
 	$isentoIss = "N";
 }
@@ -210,6 +213,8 @@ if(($nomeempresa != $Nempresa) ||($razaosocial != $Rempresa)|| ($cnpjcpfempresa 
    $sql = mysql_query("
        UPDATE cadastro
            SET 
+		   txtContador = '$txtContador',
+		   txtCNPJContador = '$txtCNPJContador',
 		   nome = '$nomeempresa',
            razaosocial = '$razaosocial',
            $campo = '$cnpjcpfempresa',

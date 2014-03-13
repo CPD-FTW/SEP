@@ -69,6 +69,16 @@ $dados_municipio=mysql_fetch_array($sql_municipio);
  visibility:<?php if(isset($btBuscarCliente)) { echo"visible"; }else{ echo"hidden"; }?>
 }
 
+#divNotificacao{
+	position:absolute;
+	left:30%;
+	top:20%;
+	width:550px;
+	height:276px;
+	z-index:1;
+	visibility:hidden;
+}
+
 /*Faz com que todos os inputs de texto so mostrem letras maiusculas*/
 input[type*="text"]{
 	text-transform:uppercase;
@@ -78,11 +88,17 @@ input[type*="text"]{
 <div id="divBusca"  >
 	<?php include("inc/cadastro/prestadores/busca.php"); ?>
 </div>
+     <a name="NOME"></a> 
+<div id="divNotificacao"  >
+	<?php include("inc/cadastro/prestadores/notificacao.php"); ?>
+</div>
 <?php	
 	if(($_POST['CODEMISSOR'])){		   
 		$codigo=$_POST['CODEMISSOR'];	
 		$sql=mysql_query("
 						SELECT 
+							txtContador,
+							txtCNPJContador,
 							codigo,
 							codtipo,
 							codtipodeclaracao,
@@ -117,7 +133,7 @@ input[type*="text"]{
 						WHERE
 							codigo='$codigo'
 						");
-		list($codigo,$codtipo,$codtipodec,$nome,$razaosocial,$cnpjcpf,$inscrmunicipal,$inscricaoestadual, $logradouro,$numero,$complemento,$bairro,$fone,$celular,$cep,$municipio,$uf,$logo,$email,$ultima,$notalimite,$estado,$codcontador,$nfe,$pispasep,$datafim,$datainicio,$isentoiss,$regimeEspecial)= mysql_fetch_array($sql);
+		list($txtContador,$txtCNPJContador,$codigo,$codtipo,$codtipodec,$nome,$razaosocial,$cnpjcpf,$inscrmunicipal,$inscricaoestadual, $logradouro,$numero,$complemento,$bairro,$fone,$celular,$cep,$municipio,$uf,$logo,$email,$ultima,$notalimite,$estado,$codcontador,$nfe,$pispasep,$datafim,$datainicio,$isentoiss,$regimeEspecial)= mysql_fetch_array($sql);
 		
 		// verifica se o prestador é simples nacional
 		$simples = coddeclaracao("Simples Nacional");
@@ -382,6 +398,25 @@ input[type*="text"]{
                     value="<?php echo ($ultima+1); ?>"S onkeydown="return NumbersOnly(event);" />
                 </td>
 			</tr>
+            <tr >
+            	<td colspan="4">
+                <br />
+                	<fieldset>
+                    	<legend style="background:transparent;">Dados do Contador</legend>
+                        <table cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td align="left">
+                                Nome<br /><input type="text" class="texto" size="50" maxlength="100" id="txtContador" name="txtContador" value="<?php print $txtContador; ?>" />&nbsp;&nbsp;&nbsp;
+                                </td>
+                                <td align="left">
+                                CNPJ/CPF<br /><input type="text" class="texto" onkeydown="return NumbersOnly( event );" onkeyup="CNPJCPFMsk( this );" maxlength="18" id="txtCNPJContador" name="txtCNPJContador" value="<?php print $txtCNPJContador; ?>" />
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                <br />
+                </td>
+            </tr>
 			<tr>
 				<td align="left" style="text-indent:5px">NFe</td>
 				<td colspan="3" align="left">
@@ -424,7 +459,7 @@ input[type*="text"]{
 						<?php
 				if(($_POST['CODEMISSOR'])){
 					$COD = $_POST['CODEMISSOR'];	   	
-					$sql=mysql_query("SELECT codigo, nome, cpf FROM cadastro_resp WHERE codemissor = '$COD' AND codcargo <> '$codcargo_gerente' AND codcargo <> '$codcargo_diretor'");
+					$sql=mysql_query("SELECT codigo, nome, cpf FROM cadastro_resp WHERE codemissor = '$COD' AND codcargo <> '$codcargo_gerente'");
 					$contsocios = mysql_num_rows($sql);
 					$cont_aux_socios = $contsocios;	  
 					print("<tr>
@@ -434,15 +469,15 @@ input[type*="text"]{
 							 </tr>
 							");
 					while($array=mysql_fetch_array($sql))
-                                        {
-                                                print("     
-                                                <tr>
-                                                   <td align=left colspan=4>
-                                                        <input type=hidden name=txtCodigoSocio".$contsocios." value=".$array['codigo'].">
-                                                        Nome&nbsp; <input type=text name=txtnomesocio$contsocios value=\"".$array['nome']."\" size=40 maxlength=100 class=texto>&nbsp;
-                                                        CPF&nbsp;<input type=text name=txtcpfsocio$contsocios value=".$array['cpf']." size=14 maxlength=14 class=texto 
-                                                        onkeyup=\"CNPJCPFMsk( this );\">");
-							print("<input type=checkbox name=checkExcluiSocio$contsocios value=$CodigoSocio>Excluir"); 				
+					{
+						print("	    
+						<tr>
+						   <td align=left colspan=4>
+							<input type=hidden name=txtCodigoSocio".$contsocios." value=".$array['codigo'].">
+							Nome&nbsp; <input type=text name=txtnomesocio$contsocios value=\"".$array['nome']."\" size=40 maxlength=100 class=texto>&nbsp;
+							CPF&nbsp;<input type=text name=txtcpfsocio$contsocios value=".$array['cpf']." size=14 maxlength=14 class=texto 
+							onkeyup=\"CNPJCPFMsk( this );\">");
+							print("<input type=checkbox name=checkExcluiSocio$contsocios value=".$array['codigo'].">Excluir"); 				
 						print("</td>		   
 						</tr> ");
 						$contsocios--;		  
@@ -542,15 +577,20 @@ input[type*="text"]{
 			$string_onclick1 = "return  (ValidaFormulario('txtInsNomeEmpresa|txtInsRazaoSocial|txtInsCpfCnpjEmpresa|txtInsEnderecoEmpresa|txtNumero|txtBairro|txtCEP|txtFoneComercial|txtInsUfEmpresa|txtInsMunicipioEmpresa|txtInsEmailEmpresa|cmbTipoDec|cmbCodtipo|txtNomeSocio1|txtCpfSocio1|cmbCategoria1'));";
 			$string_onclick2 = "return  (ValidaFormulario('txtInsNomeEmpresa|txtInsRazaoSocial|txtInsCpfCnpjEmpresa|txtInsEnderecoEmpresa|txtNumero|txtBairro|txtCEP|txtFoneComercial|txtInsUfEmpresa|txtInsMunicipioEmpresa|txtInsEmailEmpresa|cmbTipoDec|cmbCodtipo'));";		
 		?>
-		<input type="button" value="Novo" name="btNovo" class="botao" onclick="LimpaCampos('frmCadastroEmpresa')"  />
-		<input type="button" value="Pesquisar" name="btPesquisar" class="botao" onclick="document.getElementById('divBusca').style.visibility='visible'" />
-		<input type="submit" value="Excluir" name="btExcluir" class="botao" onclick="return confirm('Deseja desativar este prestador?');" />
-		<input type="submit" value="Salvar" name="btCadastrar" class="botao" id="btCadastrar" 
+		<!--
+        <input type="button" value="Novo" name="btNovo" class="botao" onclick="LimpaCampos('frmCadastroEmpresa')"  />
+		-->
+        <a href="#NOME" style="text-decoration:none"><input type="button" value="Pesquisar" name="btPesquisar" class="botao" onclick="document.getElementById('divBusca').style.visibility='visible'" /></a>
+		<!--
+        <input type="submit" value="Excluir" name="btExcluir" class="botao" onclick="return confirm('Deseja desativar este prestador?');" />
+		-->
+        <input type="submit" value="Salvar" name="btCadastrar" class="botao" id="btCadastrar" 
 		onclick="<?php if(($_POST['CODEMISSOR'])){ echo $string_onclick2; }else{ echo $string_onclick1; } ?>" />
 		<?php if($_POST['CODEMISSOR']){?>
         <input type="submit" value="Imprimir" name="btImprimir" class="botao"
             onclick="cancelaAction(this.form.id,'inc/cadastro/prestadores/imprime_cadastro.php','_blank')" />
-        
+            &nbsp;
+		<a href="#NOME" style="text-decoration:none"><input type="button" value="Notifica&ccedil;&atilde;o" class="botao" onclick="document.getElementById('divNotificacao').style.visibility='visible';document.getElementById('emailOculto').value='<?php print $email; ?>';document.getElementById('codigoOculto').value=document.getElementById('txtInsCodCadastro').value;" /></a>
         <?php
 			}
 		?>

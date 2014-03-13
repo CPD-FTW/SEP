@@ -63,10 +63,10 @@ Fith Floor, Boston, MA 02110-1301, USA
 					$campo = tipoPessoa($cpfcnpj);
 					
 					if($nome != '' && $cpfcnpj == ''){
-						$where=" WHERE nome LIKE'%$nome%' OR razaosocial LIKE'%$nome%' AND estado <> 'I'";
+						$where=" WHERE nome LIKE'%$nome%' AND estado <> 'NL'";
 					}
 					else if($nome == '' && $cpfcnpj != ''){
-						$where=" WHERE $campo LIKE'%$cpfcnpj%' AND estado <> 'I'";
+						$where=" WHERE $campo LIKE'%$cpfcnpj%' AND estado <> 'NL'";
 					}
 					
 					//$nome?$cpfcnpj?$where=" WHERE nome LIKE'%$nome%' AND $campo = '$cpfcnpj' AND estado <> 'NL'":$where=" WHERE nome LIKE'%$nome%' AND estado <> 'NL'":NULL;
@@ -96,7 +96,7 @@ Fith Floor, Boston, MA 02110-1301, USA
 					ORDER BY
 						nome
 					");
-					while(list($codigo,$nome,$razaosocial,$cnpjcpf,$inscrmunicipal,$logradouro,$numero,$municipio,$uf,$logo,$email,$ultima,$notalimite,$estado,/*$simplesnaconal,*/$codcontador,$nfe) = mysql_fetch_array($sql)){
+					while(list($codigo,$nome,$razaosocial,$cnpjcpf,$inscrmunicipal,$logradouro,$numero,$municipio,$uf,$logo,$email,$ultima,$notalimite,$estado,$simplesnaconal,$codcontador,$nfe) = mysql_fetch_array($sql)){
 						if(!$razaosocial){
 							$razaosocial = $nome;
 						}
@@ -109,7 +109,7 @@ Fith Floor, Boston, MA 02110-1301, USA
 							case "I": $estado = "Inativo";break;
 						}//fim switch
 						if($razaosocial){
-							echo "<option title=\"NOME FANTASIA: $nome\" value=\"$codigo\">".$cnpjcpf." - ".$razaosocial."</option>";
+							echo "<option value=\"$codigo\">".$cnpjcpf." - ".$razaosocial."</option>";
 						}
 					}
 				}?>

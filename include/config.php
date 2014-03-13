@@ -1,5 +1,10 @@
 <?php
 
+  if(date("Ymd")< 20140224){
+	 header('Content-Type: text/html; charset=utf-8');
+	 print "<script>alert('O Ambiente de Produção estará disponível dia 24/02/2014. \\n Assim você está sendo redirecionado ao Ambiente de Teste.');window.location='http://www.barradopirai.rj.gov.br/enota_teste/site/index.php'</script>"; 
+  }
+
 
   $useragent = $_SERVER['HTTP_USER_AGENT'];
   $testaNavegador = strrpos($useragent,"MSIE");
@@ -32,8 +37,25 @@ Fith Floor, Boston, MA 02110-1301, USA
 */
 ?>
 <?php
-$HOST = "";
-$USUARIO = "";
+$URL ="http://www.barradopirai.rj.gov.br/enota"; 
+
+$HOST = "br12.hostgator.com.br";
+$USUARIO = "pmbpr396_desenvo";
+$SENHA = "seiti*2013";
+$BANCO = "pmbpr396_desenvolvimento";
+
+echo "login: ".$_SESSION['login-banco']."<BR>";
+
+if ($_SESSION['login-banco'] == 'yuri'){
+	$USUARIO = 'pmbpr396_yuri';
+}
+
+echo 'usuario do banco:'. $USUARIO."<br>";
+
+/*
+$HOST = "localhost";
+$USUARIO = "root";
 $SENHA = "";
-$BANCO = "";
+$BANCO = "enota";
+*/
 ?>
